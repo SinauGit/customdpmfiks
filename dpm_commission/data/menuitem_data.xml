@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="menu_invoicing_commission" model="ir.ui.menu">
+        <field name="name">Commissions</field>
+        <field name="sequence" eval="50" />
+        <field
+            name="parent_id"
+            search="[('child_id', 'in', ref('account.menu_finance_receivables'))]"
+        />
+    </record>
+    <menuitem
+        name="Commission"
+        id="menu_commission"
+        groups="group_commission_user"
+        
+        sequence="50"
+        parent="sale.sale_menu_root" 
+    />
+    <!-- <menuitem
+        name="Configuration"
+        id="menu_commission_management"
+        parent="menu_commission"
+        groups="group_commission_manager"
+        sequence="100"
+    /> -->
+</odoo>

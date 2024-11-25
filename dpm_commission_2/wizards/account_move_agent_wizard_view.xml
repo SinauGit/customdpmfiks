@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_agent_form" model="ir.ui.view">
+        <field name="name">account.move.agent.wizard.form</field>
+        <field name="model">account.move.agent.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Sales Teams">
+                <sheet>
+                    <group>
+                        <field name="move_id" invisible="1"/>
+                        <field name="amount_total" invisible="1"/>
+                    </group>
+                    <field name="line_ids">
+                        <tree editable="bottom">
+                            <field name="agent_id" string="Salesperson"/>
+                            <field name="commission_id" string="Commission"/>
+                        </tree>
+                    </field>
+                </sheet>
+                <footer>
+                    <button name="action_apply" string="Save" type="object" class="btn-primary"/>
+                    <button string="Discard" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

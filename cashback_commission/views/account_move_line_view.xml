@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- views/account_move_line_view.xml -->
+<odoo>
+    <!-- Inherit invoice form view -->
+    <record id="view_move_form_inherit_cashback" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.cashback</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_line_ids']/tree//field[@name='price_subtotal']" position="after">
+                <field name="cashback_percentage" column_invisible="1"/>
+                <field name="cashback_amount" column_invisible="1"/>
+                <field name="price_after_cashback" column_invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
