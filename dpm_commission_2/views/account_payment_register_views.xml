@@ -5,15 +5,16 @@
         <field name="model">account.payment.register</field>
         <field name="inherit_id" ref="account.view_account_payment_register_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='journal_id']" position="after">
-                <field name="agent_id"
-                       string="Collector"
-                       context="{'default_agent': True, 'default_customer': False, 'default_supplier': True}"/>
-                <field name="commission_id" 
-                       invisible="1"
-                       />
-                       <!-- required="agent_id" -->
-            </xpath>
+            <group position="inside">
+                <group string="Collector Information">
+                    <field name="agent_id"
+                           string="Collector"
+                           context="{'default_agent': True, 'default_customer': False, 'default_supplier': True}"/>
+                    <field name="commission_id" 
+                           invisible="1"/>
+                           <!-- required="agent_id" -->
+                </group>
+            </group>
         </field>
     </record>
 </odoo>

@@ -5,7 +5,7 @@
     "depends": [
         "account",
         "dpm_commission",
-        "cashback_commission",
+        # "cashback_commission",
     ],
     "data": [
         "security/account_commission_security.xml",

@@ -4,7 +4,7 @@
         <field name="name">Settlements tree</field>
         <field name="model">commission.settlement</field>
         <field name="arch" type="xml">
-            <tree decoration-danger="state == 'cancel'">
+            <tree decoration-danger="state == 'cancel'" create="false">
                 <field name="agent_id" />
                 <field name="company_id" groups="base.group_multi_company" />
                 <!-- <field name="date_from"/> -->

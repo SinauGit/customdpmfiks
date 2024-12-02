@@ -20,8 +20,8 @@ Long description of module's purpose
     # any module necessary for this one to work correctly
     'depends': [
         'dpm_commission',
-        # 'dpm_commission_2',
-        # 'dpm_commission_3',
+        'dpm_commission_2',
+        'dpm_commission_3',
         'account',
     ],
 

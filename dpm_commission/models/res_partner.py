@@ -30,15 +30,15 @@ class ResPartner(models.Model):
     )
     settlement = fields.Selection(
         selection=[
-            ("biweekly", "Bi-weekly"),
-            ("monthly", "Monthly"),
-            ("quaterly", "Quarterly"),
-            ("semi", "Semi-annual"),
-            ("annual", "Annual"),
+            # ("biweekly", "Bi-weekly"),
+            # ("monthly", "Monthly"),
+            # ("quaterly", "Quarterly"),
+            # ("semi", "Semi-annual"),
+            # ("annual", "Annual"),
             ("6_months_ago", "6 months ago"),
         ],
         string="Settlement period",
-        default="semi",
+        default="6_months_ago",
     )
     settlement_ids = fields.One2many(
         comodel_name="commission.settlement",

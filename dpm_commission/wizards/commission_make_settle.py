@@ -76,14 +76,9 @@ class CommissionMakeSettle(models.TransientModel):
         elif agent.settlement == "annual":
             return current_date + relativedelta(years=1)
         elif agent.settlement == "6_months_ago":
-            # Tanggal akhir adalah awal bulan dari 1 tahun yang lalu
-            one_year_ago = current_date - relativedelta(years=1)
-            first_day_of_one_year_ago = date(
-                year=one_year_ago.year,
-                month=one_year_ago.month,
-                day=1
-            )
-            return first_day_of_one_year_ago
+            # Menggunakan tanggal yang sama 1 tahun sebelumnya
+            one_year_ago = self.date_to - relativedelta(years=1)
+            return one_year_ago
 
     def _get_settlement(self, agent, company, currency, sett_from, sett_to):
         self.ensure_one()
@@ -171,12 +166,9 @@ class CommissionMakeSettle(models.TransientModel):
                         day=1
                     ) + relativedelta(months=1, days=-1)
                     
+                    # Perubahan di sini - menggunakan tanggal yang sama 1 tahun sebelumnya
                     one_year_ago = date_to - relativedelta(years=1)
-                    first_day_of_one_year_ago = date(
-                        year=one_year_ago.year,
-                        month=one_year_ago.month,
-                        day=1
-                    )
+                    first_day_of_one_year_ago = one_year_ago
                     
                     # Khusus untuk collector, gunakan paid_amount
                     if line.commission_id.name == 'Collector':
@@ -186,6 +178,8 @@ class CommissionMakeSettle(models.TransientModel):
                         elif first_day_of_one_year_ago <= line.invoice_date < last_day_of_six_months_ago:
                             total_rate2 = line.commission_id.rate_2 + line.commission_id.additional_commission
                             line.amount = line.paid_amount * (total_rate2 / 100.0)
+                        else:
+                            continue
                     else:
                         # Untuk non-collector, gunakan perhitungan normal
                         if line.invoice_date.month == six_months_ago.month and line.invoice_date.year == six_months_ago.year:

@@ -17,12 +17,20 @@ class CommissionSettlement(models.Model):
         string="Salesperson",
     )
     agent_type = fields.Selection(related="agent_id.agent_type")
+
     settlement_type = fields.Selection(
-        selection=[("manual", "Manual")],
-        default="manual",
+        selection=[("sale_invoice", "Sales Invoices")],
+        default="sale_invoice",
         readonly=True,
         required=True,
     )
+
+    # settlement_type = fields.Selection(
+    #     selection=[("manual", "Manual")],
+    #     default="manual",
+    #     readonly=True,
+    #     required=True,
+    # )
     can_edit = fields.Boolean(
         compute="_compute_can_edit",
         store=True,
@@ -68,7 +76,12 @@ class CommissionSettlement(models.Model):
     @api.depends("settlement_type")
     def _compute_can_edit(self):
         for record in self:
-            record.can_edit = record.settlement_type == "manual"
+            record.can_edit = False
+
+    # @api.depends("settlement_type")
+    # def _compute_can_edit(self):
+    #     for record in self:
+    #         record.can_edit = record.settlement_type == "manual"
 
     def action_cancel(self):
         self.write({"state": "cancel"})
