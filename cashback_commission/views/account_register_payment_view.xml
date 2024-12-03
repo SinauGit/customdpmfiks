@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_payment_register_form_inherit_cashback" model="ir.ui.view">
-        <field name="name">account.payment.register.form.inherit.cashback</field>
+    <record id="view_account_payment_register_form_inherit" model="ir.ui.view">
+        <field name="name">account.payment.register.form.inherit</field>
         <field name="model">account.payment.register</field>
         <field name="inherit_id" ref="account.view_account_payment_register_form"/>
         <field name="arch" type="xml">
             <group position="inside">
-                <group string="Cashback Information">
-                    <field name="cashback_percentage" string="Cashback Percentage (%)" />
+                <group string="Cashback and Collector Information" 
+                       invisible="payment_type != 'inbound'">
+                    <field name="cashback_percentage" 
+                           string="Cashback Percentage (%)" />
+                    <field name="agent_id"
+                           string="Collector"
+                           context="{'default_agent': True, 'default_customer': False, 'default_supplier': True}"/>
+                    <field name="commission_id" 
+                           invisible="1"/>
                 </group>
             </group>
         </field>

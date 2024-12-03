@@ -31,7 +31,7 @@
                             <field name="agent_type" invisible="1"/>
                             <!-- required="agent" -->
                             <field name="commission_id" required="agent" />
-                            <field name="settlement" />
+                            <field name="settlement" invisible="1"/>
                             <!-- required="agent"  -->
                         </group>
                         <group

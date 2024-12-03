@@ -17,7 +17,7 @@
         "views/report_settlement_templates.xml",
         "report/commission_analysis_view.xml",
         "wizards/wizard_invoice.xml",
-        "views/account_payment_register_views.xml",
+        # "views/account_payment_register_views.xml",
         "wizards/account_move_agent_wizard_view.xml",
     ],
     "installable": True,
