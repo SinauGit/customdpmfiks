@@ -167,6 +167,11 @@ class SettlementLine(models.Model):
         related="invoice_agent_line_id.object_id",
         string="Source invoice line",
     )
+    invoice_number = fields.Char(
+        string="Invoice Number",
+        related="invoice_agent_line_id.invoice_display_name",
+        store=True,
+    )
 
     @api.depends("invoice_agent_line_id")
     def _compute_date(self):

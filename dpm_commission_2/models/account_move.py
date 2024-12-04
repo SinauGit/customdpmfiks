@@ -201,6 +201,11 @@ class AccountInvoiceLineAgent(models.Model):
     currency_id = fields.Many2one(
         related="object_id.currency_id",
     )
+    invoice_display_name = fields.Char(
+        string="Invoice Number",
+        related="invoice_id.name",
+        store=True,
+    )
 
     @api.depends(
         "object_id.price_subtotal",

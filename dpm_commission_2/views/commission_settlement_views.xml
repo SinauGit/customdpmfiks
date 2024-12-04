@@ -48,7 +48,8 @@
                 position="after"
             >
                 <field
-                    name="invoice_line_id"
+                    name="invoice_number"
+                    string="Source Invoice"
                     column_invisible="(parent.settlement_type != 'sale_invoice')"
                     groups="account.group_account_invoice"
                 />
