@@ -19,10 +19,22 @@
         <field name="model">commission.settlement</field>
         <field name="inherit_id" ref="dpm_commission.view_settlement_form" />
         <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_view_invoice"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-pencil-square-o"
+                        invisible="not invoice_count">  <!-- Ganti attrs dengan invisible -->
+                        <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                    </button>
+                </div>
+            </xpath>
+            
             <button name="action_cancel" position="before">
                 <button
                     string="Make invoice"
-                    invisible="(state != 'settled') or (agent_type != 'agent')"
+                    invisible="state != 'settled' or agent_type != 'agent'"
                     class="oe_highlight"
                     type="object"
                     name="action_invoice"
@@ -30,7 +42,7 @@
                 />
                 <button
                     string="Reset to draft"
-                    invisible="(state != 'except_invoice')"
+                    invisible="state != 'except_invoice'"
                     type="object"
                     name="action_draft"
                     groups="account.group_account_invoice"
@@ -39,7 +51,7 @@
             <field name="settlement_type" position="after">
                 <field
                     name="invoice_id"
-                    invisible="(state != 'invoiced')"
+                    invisible="state not in ['invoiced','paid']"
                     groups="account.group_account_invoice"
                 />
             </field>

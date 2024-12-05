@@ -31,6 +31,10 @@ class CommissionSettlement(models.Model):
         comodel_name="account.move",
         compute="_compute_invoice_id",
     )
+    invoice_count = fields.Integer(
+        string="# of Invoices",
+        compute='_compute_invoice_count',
+    )
 
     def _compute_can_edit(self):
 
@@ -44,6 +48,10 @@ class CommissionSettlement(models.Model):
             record.invoice_id = record.invoice_line_ids.filtered(
                 lambda x: x.parent_state != "cancel"
             )[:1].move_id
+
+    def _compute_invoice_count(self):
+        for record in self:
+            record.invoice_count = len(record.invoice_id) if record.invoice_id else 0
 
     def action_cancel(self):
 
@@ -155,6 +163,17 @@ class CommissionSettlement(models.Model):
         ).action_switch_move_type()
         self.write({"state": "invoiced"})
         return invoices
+
+    def action_view_invoice(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_in_invoice_type")
+        if len(self.invoice_id) > 1:
+            action["domain"] = [("id", "in", self.invoice_id.ids)]
+        else:
+            form_view = [(self.env.ref("account.view_move_form").id, "form")]
+            action["views"] = form_view
+            action["res_id"] = self.invoice_id.id
+        return action
 
 
 class SettlementLine(models.Model):

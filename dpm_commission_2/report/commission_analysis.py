@@ -25,14 +25,14 @@ class InvoiceCommissionAnalysisReport(models.Model):
     categ_id = fields.Many2one("product.category", "Category of Product", readonly=True)
     product_id = fields.Many2one("product.product", "Product", readonly=True)
     uom_id = fields.Many2one("uom.uom", "Unit of Measure", readonly=True)
-    quantity = fields.Float("# of Qty", readonly=True)
-    price_unit = fields.Float("Unit Price", readonly=True)
-    price_subtotal = fields.Float("Subtotal", readonly=True)
-    balance = fields.Float(
-        readonly=True,
-    )
+    quantity = fields.Float("Total Quantity", readonly=True)
+    # price_unit = fields.Float("Unit Price", readonly=True)
+    # price_subtotal = fields.Float("Subtotal", readonly=True)
+    # balance = fields.Float(
+    #     readonly=True,
+    # )
     percentage = fields.Integer("Percentage of commission", readonly=True)
-    amount = fields.Float(readonly=True)
+    amount = fields.Float("Total Amount", readonly=True)
     invoice_line_id = fields.Many2one("account.move.line", readonly=True)
     settled = fields.Boolean(readonly=True)
     commission_id = fields.Many2one("commission", "Commission", readonly=True)
@@ -49,9 +49,7 @@ class InvoiceCommissionAnalysisReport(models.Model):
             ail.product_id AS product_id,
             pt.uom_id AS uom_id,
             SUM(ail.quantity) AS quantity,
-            AVG(ail.price_unit) AS price_unit,
-            SUM(ail.price_subtotal) AS price_subtotal,
-            SUM(ail.balance) AS balance,
+            AVG(c.rate_1 + c.rate_2) AS percentage,
             SUM(aila.amount) AS amount,
             ail.id AS invoice_line_id,
             aila.settled AS settled,
