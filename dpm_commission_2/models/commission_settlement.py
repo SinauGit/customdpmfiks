@@ -93,18 +93,15 @@ class CommissionSettlement(models.Model):
         if date:
             vals.update({"invoice_date": date})
         for settlement in self:
-            # Put period string
-            lang = self.env["res.lang"].search(
-                [
-                    (
-                        "code",
-                        "=",
-                        self.agent_id.lang or self.env.context.get("lang", "en_US"),
-                    )
-                ]
-            )
-            date_from = fields.Date.from_string(settlement.date_from)
-            date_to = fields.Date.from_string(settlement.date_to)
+            # Get first settlement line date
+            first_line = settlement.line_ids[:1]
+            if first_line and first_line.date:
+                # Format bulan dan tahun dari tanggal settlement line pertama
+                date_str = first_line.date.strftime('%B %Y')  # Contoh: "December 2023"
+                description = f"Commission {date_str}"
+            else:
+                description = product.with_context(lang=lang.code).display_name
+
             vals["invoice_line_ids"].append(
                 (
                     0,
@@ -113,14 +110,7 @@ class CommissionSettlement(models.Model):
                         "product_id": product.id,
                         "quantity": -1 if settlement.total < 0 else 1,
                         "price_unit": abs(settlement.total),
-                        "name": product.with_context(lang=lang.code).display_name
-                        + "\n"
-                        + _(
-                            "Period: from %(date_from)s to %(date_to)s",
-                            date_from=date_from.strftime(lang.date_format),
-                            date_to=date_to.strftime(lang.date_format),
-                        ),
-                        # todo or compute agent currency_id?
+                        "name": description,  # Gunakan description yang baru
                         "currency_id": settlement.currency_id.id,
                         "settlement_id": settlement.id,
                     },

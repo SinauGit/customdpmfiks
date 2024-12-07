@@ -127,6 +127,28 @@ class AccountMove(models.Model):
             }
         }
 
+    Override method button_draft untuk menghapus collector sebelum reset ke draft
+
+    def button_draft(self):
+        # Override method button_draft untuk menghapus collector sebelum reset ke draft
+        for move in self:
+            # Cari agent collector di invoice lines
+            collector_agents = move.invoice_line_ids.mapped('agent_ids').filtered(
+                lambda x: x.commission_id.name == 'Collector'
+            )
+            if collector_agents:
+                # Hapus settlement lines terkait collector
+                collector_agents.mapped('settlement_line_ids').unlink()
+                # Hapus agent collector
+                collector_agents.unlink()
+                
+            # Reset paid_amount di invoice lines
+            for line in move.invoice_line_ids:
+                if hasattr(line, 'paid_amount'):
+                    line.paid_amount = 0.0
+
+        return super().button_draft()
+
 
 class AccountMoveLine(models.Model):
     _inherit = [
