@@ -127,7 +127,7 @@ class AccountMove(models.Model):
             }
         }
 
-    Override method button_draft untuk menghapus collector sebelum reset ke draft
+    # Override method button_draft untuk menghapus collector sebelum reset ke draft
 
     def button_draft(self):
         # Override method button_draft untuk menghapus collector sebelum reset ke draft
