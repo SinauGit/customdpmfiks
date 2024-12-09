@@ -79,7 +79,11 @@ class CommissionSettlement(models.Model):
         }
 
     def _get_invoice_partner(self):
-        return fields.first(self).agent_id
+        """Override untuk menggunakan employee"""
+        employee = fields.first(self).agent_id
+        return self.env['res.partner'].search([
+            ('name', '=', employee.name)
+        ], limit=1) or self.env.company.partner_id
 
     def _prepare_invoice(self, journal, product, date=False):
         partner = self._get_invoice_partner()

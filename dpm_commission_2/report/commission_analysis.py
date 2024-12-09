@@ -21,7 +21,11 @@ class InvoiceCommissionAnalysisReport(models.Model):
     date_invoice = fields.Date("Invoice Date", readonly=True)
     company_id = fields.Many2one("res.company", "Company", readonly=True)
     partner_id = fields.Many2one("res.partner", "Partner", readonly=True)
-    agent_id = fields.Many2one("res.partner", "Sales Teams", readonly=True)
+    agent_id = fields.Many2one(
+        "hr.employee",  # Ubah dari res.partner
+        "Sales Teams", 
+        readonly=True
+    )
     categ_id = fields.Many2one("product.category", "Category of Product", readonly=True)
     product_id = fields.Many2one("product.product", "Product", readonly=True)
     uom_id = fields.Many2one("uom.uom", "Unit of Measure", readonly=True)
@@ -44,7 +48,7 @@ class InvoiceCommissionAnalysisReport(models.Model):
             ai.state AS invoice_state,
             ai.date AS date_invoice,
             ail.company_id AS company_id,
-            rp.id AS agent_id,
+            emp.id AS agent_id,
             pt.categ_id AS categ_id,
             ail.product_id AS product_id,
             pt.uom_id AS uom_id,
@@ -67,7 +71,7 @@ class InvoiceCommissionAnalysisReport(models.Model):
             LEFT JOIN commission c ON c.id = aila.commission_id
             LEFT JOIN product_product pp ON pp.id = ail.product_id
             INNER JOIN product_template pt ON pp.product_tmpl_id = pt.id
-            LEFT JOIN res_partner rp ON aila.agent_id = rp.id
+            LEFT JOIN hr_employee emp ON aila.agent_id = emp.id
         """
         return from_str
 
@@ -77,7 +81,7 @@ class InvoiceCommissionAnalysisReport(models.Model):
             ai.state,
             ai.date,
             ail.company_id,
-            rp.id,
+            emp.id,
             pt.categ_id,
             ail.product_id,
             pt.uom_id,

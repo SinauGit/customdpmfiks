@@ -12,7 +12,7 @@ class AccountMove(models.Model):
     )
     partner_agent_ids = fields.Many2many(
         string="Sales Teams",
-        comodel_name="res.partner",
+        comodel_name="hr.employee",
         compute="_compute_agents",
         search="_search_agents",
     )

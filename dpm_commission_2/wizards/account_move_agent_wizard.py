@@ -70,7 +70,7 @@ class AccountMoveAgentWizardLine(models.TransientModel):
 
     wizard_id = fields.Many2one('account.move.agent.wizard', string='Wizard')
     agent_id = fields.Many2one(
-        'res.partner',
+        'hr.employee',
         string='Salesperson',
         domain=[('agent', '=', True)],
         required=True

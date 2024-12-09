@@ -11,7 +11,7 @@ class CommissionSettlement(models.Model):
     date_from = fields.Date(string="From")
     date_to = fields.Date(string="To")
     agent_id = fields.Many2one(
-        comodel_name="res.partner",
+        comodel_name="hr.employee",
         domain="[('agent', '=', True)]",
         required=True,
         string="Salesperson",
@@ -110,7 +110,7 @@ class SettlementLine(models.Model):
         required=True,
     )
     agent_id = fields.Many2one(
-        comodel_name="res.partner",
+        comodel_name="hr.employee",
         related="settlement_id.agent_id",
         store=True,
     )

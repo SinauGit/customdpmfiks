@@ -13,7 +13,7 @@ class AccountMoveLine(models.Model):
             and x.product_id
             and not x.agent_ids
         ):
-            partner = record.move_id.invoice_user_id.partner_id
-            if partner.agent and partner.salesman_as_agent:
-                record.agent_ids = [(0, 0, record._prepare_agent_vals(partner))]
+            employee = record.move_id.invoice_user_id.employee_id
+            if employee and employee.agent:
+                record.agent_ids = [(0, 0, record._prepare_agent_vals(employee))]
         return result

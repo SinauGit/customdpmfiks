@@ -5,7 +5,7 @@ class CommissionLineMixin(models.Model):
     _description = "Commission Line Mixin"
     
     agent_id = fields.Many2one(
-        comodel_name="res.partner",
+        comodel_name="hr.employee",
         domain=[("agent", "=", True)],
         required=True,
     )

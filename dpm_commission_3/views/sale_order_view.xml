@@ -68,16 +68,14 @@
         <field name="model">sale.order.line.agent</field>
         <field name="arch" type="xml">
             <tree editable="bottom">
-                <field
-                    name="agent_id"
-                    string="Salesperson"
-                    context="{'default_agent': True, 'default_customer': False, 'default_supplier': True}"
-                />
-                <field
-                    name="commission_id"
-                    domain="['|', ('settlement_type', '=', 'sale_invoice'), ('settlement_type', '=', False)]"
-                />
-                <!-- <field name="amount" /> -->
+                <field 
+                    name="agent_id" 
+                    string="Salesperson" 
+                    domain="[]"
+                    context="{'default_agent': True}"/>
+                <field 
+                    name="commission_id" 
+                    domain="['|', ('settlement_type', '=', 'sale_invoice'), ('settlement_type', '=', False)]"/>
             </tree>
         </field>
     </record>

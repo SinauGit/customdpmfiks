@@ -17,7 +17,7 @@ class SaleOrder(models.Model):
 
     partner_agent_ids = fields.Many2many(
         string="Sales Teams",
-        comodel_name="res.partner",
+        comodel_name="hr.employee",
         compute="_compute_agents",
         search="_search_agents",
     )
@@ -90,9 +90,9 @@ class SaleOrderLine(models.Model):
         self.agent_ids = False  # for resetting previous agents
         for record in self:
             if record.order_id.partner_id and not record.commission_free:
-                record.agent_ids = record._prepare_agents_vals_partner(
-                    record.order_id.partner_id, settlement_type="sale_invoice"
-                )
+                employee = record.order_id.user_id.employee_id
+                if employee and employee.agent:
+                    record.agent_ids = [(0, 0, record._prepare_agent_vals(employee))]
 
     def _prepare_invoice_line(self, **optional_values):
         res = super()._prepare_invoice_line(**optional_values)
@@ -111,6 +111,12 @@ class SaleOrderLineAgent(models.Model):
 
     object_id = fields.Many2one(comodel_name="sale.order.line")
 
+    agent_id = fields.Many2one(
+        comodel_name="hr.employee",
+        domain=[("agent", "=", True)],
+        required=True,
+    )
+
     @api.depends(
         "commission_id",
         "object_id.price_subtotal",
@@ -126,15 +132,3 @@ class SaleOrderLineAgent(models.Model):
                 order_line.product_id,
                 order_line.product_uom_qty,
             )
-
-class SaleOrdeLine(models.Model):
-    _inherit = "sale.order.line"
-
-    def _compute_agent_ids(self):
-
-        result = super()._compute_agent_ids()
-        for record in self.filtered(lambda x: x.order_id.partner_id):
-            partner = record.order_id.user_id.partner_id
-            if not record.agent_ids and partner.agent and partner.salesman_as_agent:
-                record.agent_ids = [(0, 0, record._prepare_agent_vals(partner))]
-        return result

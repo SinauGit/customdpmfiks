@@ -4,8 +4,8 @@ class AccountPaymentRegisterInherit(models.TransientModel):
     _inherit = 'account.payment.register'
     
     agent_id = fields.Many2one(
-        'res.partner',
-        domain=[('agent', '=', True)],
+        'hr.employee',
+        domain=[("agent", "=", True)],
         string='Collector'
     )
     commission_id = fields.Many2one(

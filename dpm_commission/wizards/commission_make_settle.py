@@ -11,7 +11,8 @@ class CommissionMakeSettle(models.TransientModel):
 
     date_to = fields.Date("Up to", required=True, default=fields.Date.today)
     agent_ids = fields.Many2many(
-        comodel_name="res.partner", domain="[('agent', '=', True)]"
+        comodel_name="hr.employee",
+        domain=[("agent", "=", True)]
     )
     settlement_type = fields.Selection(
         selection=[
@@ -24,33 +25,14 @@ class CommissionMakeSettle(models.TransientModel):
         compute="_compute_can_settle",
     )
 
-    @api.depends("date_to")  # use this unrelated field to trigger the computation
+    @api.depends("date_to")
     def _compute_can_settle(self):
         self.can_settle = bool(
             self.env[self._name]._fields["settlement_type"].selection
         )
 
     def _get_period_start(self, agent, date_to):
-        if agent.settlement == "monthly":
-            return date(month=date_to.month, year=date_to.year, day=1)
-        elif agent.settlement == "biweekly":
-            if date_to.day >= 16:
-                return date(month=date_to.month, year=date_to.year, day=16)
-            else:
-                return date(month=date_to.month, year=date_to.year, day=1)
-        elif agent.settlement == "quaterly":
-            # Get first month of the date quarter
-            month = (date_to.month - 1) // 3 * 3 + 1
-            return date(month=month, year=date_to.year, day=1)
-        elif agent.settlement == "semi":
-            if date_to.month > 6:
-                return date(month=7, year=date_to.year, day=1)
-            else:
-                return date(month=1, year=date_to.year, day=1)
-        elif agent.settlement == "annual":
-            return date(month=1, year=date_to.year, day=1)
-        elif agent.settlement == "6_months_ago":
-            # Tanggal mulai adalah akhir bulan dari 6 bulan yang lalu
+        if agent.settlement == "6_months_ago":
             six_months_ago = date_to - relativedelta(months=6)
             last_day_of_six_months_ago = date(
                 year=six_months_ago.year,
@@ -58,27 +40,13 @@ class CommissionMakeSettle(models.TransientModel):
                 day=1
             ) + relativedelta(months=1, days=-1)
             return last_day_of_six_months_ago
+        return date_to
 
     def _get_next_period_date(self, agent, current_date):
-        if agent.settlement == "monthly":
-            return current_date + relativedelta(months=1)
-        elif agent.settlement == "biweekly":
-            if current_date.day == 1:
-                return current_date + relativedelta(days=15)
-            else:
-                return date(
-                    month=current_date.month, year=current_date.year, day=1
-                ) + relativedelta(months=1, days=-1)
-        elif agent.settlement == "quaterly":
-            return current_date + relativedelta(months=3)
-        elif agent.settlement == "semi":
-            return current_date + relativedelta(months=6)
-        elif agent.settlement == "annual":
-            return current_date + relativedelta(years=1)
-        elif agent.settlement == "6_months_ago":
-            # Menggunakan tanggal yang sama 1 tahun sebelumnya
+        if agent.settlement == "6_months_ago":
             one_year_ago = self.date_to - relativedelta(years=1)
             return one_year_ago
+        return current_date
 
     def _get_settlement(self, agent, company, currency, sett_from, sett_to):
         self.ensure_one()
@@ -90,7 +58,7 @@ class CommissionMakeSettle(models.TransientModel):
                 ("company_id", "=", company.id),
                 ("currency_id", "=", currency.id),
                 ("state", "=", "settled"),
-                ("settlement_type", "=", self.settlement_type), 
+                ("settlement_type", "=", self.settlement_type),
             ],
             limit=1,
         )
@@ -132,7 +100,7 @@ class CommissionMakeSettle(models.TransientModel):
         settlement_ids = []
         
         # Ambil semua agents dari line
-        agents = self.agent_ids or self.env["res.partner"].search([("agent", "=", True)])
+        agents = self.agent_ids or self.env["hr.employee"].search([("agent", "=", True)])
         date_to = self.date_to
         
         for agent in agents:

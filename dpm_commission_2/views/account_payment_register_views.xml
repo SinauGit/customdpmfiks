@@ -9,7 +9,7 @@
                 <group string="Collector Information">
                     <field name="agent_id"
                            string="Collector"
-                           context="{'default_agent': True, 'default_customer': False, 'default_supplier': True}"/>
+                           domain="[('agent', '=', True)]"/>
                     <field name="commission_id" 
                            invisible="1"/>
                            <!-- required="agent_id" -->

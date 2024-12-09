@@ -28,17 +28,20 @@ class CommissionMixin(models.AbstractModel):
         string="Commission",
     )
 
-    def _prepare_agent_vals(self, agent):
-        return {"agent_id": agent.id, "commission_id": agent.commission_id.id}
+    def _prepare_agent_vals(self, employee):
+        return {
+            "employee_id": employee.id,
+            "commission_id": employee.commission_id.id if employee.commission_id else False,
+        }
 
     def _prepare_agents_vals_partner(self, partner, settlement_type=None):
-        agents = partner.agent_ids
+        employees = partner.employee_ids
         if settlement_type:
-            agents = agents.filtered(
+            employees = employees.filtered(
                 lambda x: not x.commission_id.settlement_type
                 or x.commission_id.settlement_type == settlement_type
             )
-        return [(0, 0, self._prepare_agent_vals(agent)) for agent in agents]
+        return [(0, 0, self._prepare_agent_vals(employee)) for employee in employees]
 
     @api.depends("commission_free")
     def _compute_agent_ids(self):

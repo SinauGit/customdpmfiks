@@ -5,8 +5,8 @@
     "depends": [
         "sale",
         "product",
-                
-                ],
+        "hr",
+    ],
     "data": [
         "security/commission_security.xml",
         "security/ir.model.access.csv",
@@ -15,7 +15,7 @@
         "views/commission_settlement_views.xml",
         "views/commission_mixin_views.xml",
         "views/product_template_views.xml",
-        "views/res_partner_views.xml",
+        "views/hr_employee_views.xml",
         "reports/commission_settlement_report.xml",
         "reports/report_settlement_templates.xml",
         "wizards/commission_make_settle_views.xml",

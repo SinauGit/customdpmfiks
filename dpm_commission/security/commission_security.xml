@@ -50,5 +50,17 @@
             <field name="global" eval="True"/>
             <field name="domain_force">[(1, '=', 1)]</field>
         </record>
+        <record id="rule_settlement_agent" model="ir.rule">
+            <field name="name">Commission settlement agent rule</field>
+            <field name="model_id" ref="model_commission_settlement"/>
+            <field name="domain_force">[('agent_id.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_commission_user'))]"/>
+        </record>
+        <record id="rule_hr_employee_commission" model="ir.rule">
+            <field name="name">HR Employee Commission Access</field>
+            <field name="model_id" ref="hr.model_hr_employee"/>
+            <field name="domain_force">[('agent','=',True)]</field>
+            <field name="groups" eval="[(4, ref('group_commission_user'))]"/>
+        </record>
     </data>
 </odoo>
