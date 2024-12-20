@@ -132,6 +132,12 @@ class AccountMove(models.Model):
     def button_draft(self):
         # Override method button_draft untuk menghapus collector sebelum reset ke draft
         for move in self:
+            # Hapus followers terlebih dahulu
+            self.env['mail.followers'].sudo().search([
+                ('res_model', '=', self._name),
+                ('res_id', '=', move.id)
+            ]).unlink()
+            
             # Cari agent collector di invoice lines
             collector_agents = move.invoice_line_ids.mapped('agent_ids').filtered(
                 lambda x: x.commission_id.name == 'Collector'

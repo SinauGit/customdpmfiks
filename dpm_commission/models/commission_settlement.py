@@ -1,4 +1,6 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError
+from odoo.tools import groupby
 
 
 class CommissionSettlement(models.Model):
@@ -91,6 +93,18 @@ class CommissionSettlement(models.Model):
         if updated_values.get("agent_id"):
             res.append((updated_values["agent_id"], subtype_ids, False))
         return res
+
+    def unlink(self):
+        if any(x.state == "invoiced" for x in self):
+            raise UserError(_("You can't delete invoiced settlements."))
+        
+        # Hapus followers terlebih dahulu
+        self.env['mail.followers'].sudo().search([
+            ('res_model', '=', self._name),
+            ('res_id', 'in', self.ids)
+        ]).unlink()
+        
+        return super().unlink()
 
 
 class SettlementLine(models.Model):
